@@ -12,6 +12,18 @@ def fib(n):
 
     return cache[n] 
 
+def fib_optimized(n):
+    if n < 2:
+        return n
+
+    n1, n2 = 0, 1
+    for i in range(2, n):
+        result = n1 + n2
+        n1 , n2 = n2, result
+
+    return n1 + n2
+
 if __name__ == "__main__":
     n = int(sys.argv[1])
     print(fib(n))
+    print(fib_optimized(n))

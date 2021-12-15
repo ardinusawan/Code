@@ -9,6 +9,7 @@
 
 import (
     "math"
+    "sort"
 )
 
 func merge(intervals [][]int) [][]int {

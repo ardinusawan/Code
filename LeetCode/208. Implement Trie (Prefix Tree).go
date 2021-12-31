@@ -1,43 +1,63 @@
 // https://leetcode.com/problems/implement-trie-prefix-tree/
 
-// create two map to store word and prefix
-// every time insert new data, populate those two
-// time and space complexity of insert O(n)
-// space and time complexity search and find prefix O(1) 
-
 type Trie struct {
-    words map[string]bool
-    prefix map[string]bool    
+    children map[string]*Trie
+    endOfWord bool
 }
 
 
 func Constructor() Trie {
-    return Trie{
-        words: make(map[string]bool),
-        prefix: make(map[string]bool),
-    } 
+    return Trie{}
 }
 
 
-func (this *Trie) Insert(word string) {
-    if this.Search(word) == false {
-        // populate prefix
-        for i, _ := range word {
-            this.prefix[word[:i+1]] = true
+func (this *Trie) Insert(word string)  {
+    current := this
+    
+    for _, v := range word {
+        c := string(v)
+        if _, ok := current.children[c]; !ok {
+            if len(current.children) == 0 {
+                current.children = make(map[string]*Trie)    
+            }
+            current.children[c] = &Trie{}
         }
-        
-        this.words[word] = true
+     
+        current = current.children[c]
     }
+    current.endOfWord = true
 }
 
 
 func (this *Trie) Search(word string) bool {
-    return this.words[word]
+    current := this
+    result := false
+
+    for _, v := range word {
+        c := string(v)
+        if _, ok := current.children[c]; ok {
+            result = current.children[c].endOfWord == true
+            current = current.children[c]
+        } else {
+            result = false
+            break
+        }
+    }
+    return result
 }
 
 
 func (this *Trie) StartsWith(prefix string) bool {
-   return this.prefix[prefix]
+    current := this
+    for _, v := range prefix {
+        c := string(v)
+        if _, ok := current.children[c]; ok {
+            current = current.children[c]
+        } else {
+            return false
+        }
+    }
+    return true
 }
 
 
